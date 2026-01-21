@@ -64,6 +64,16 @@ python -m pip install -U pip yt-dlp
 python downloader.py
 ```
 
+### Windows: Run the Python script directly
+```bat
+py downloader.py
+```
+
+If `py` is not available, use:
+```bat
+python downloader.py
+```
+
 You will be prompted for:
 - URL (TikTok / YouTube / Shorts)
 - Audio or Video
