@@ -38,6 +38,19 @@ sudo dnf install ffmpeg
 sudo apt install ffmpeg
 ```
 
+### Windows
+Using winget:
+```bat
+winget install Gyan.FFmpeg
+```
+
+Using Chocolatey:
+```bat
+choco install ffmpeg
+```
+
+Manual install: download a build from https://www.gyan.dev/ffmpeg/builds/ and add `ffmpeg` to your PATH.
+
 ---
 
 ## Install (Python deps)
