@@ -23,16 +23,32 @@ def _run(args: argparse.Namespace) -> int:
 
 def add_parser(subparsers: argparse._SubParsersAction) -> None:
     parser = subparsers.add_parser("unfollowers", help="Compare following vs followers lists")
-    parser.add_argument("--following", required=True, help="Path to following usernames (one per line)")
-    parser.add_argument("--followers", required=True, help="Path to follower usernames (one per line)")
+    parser.add_argument(
+        "--following",
+        required=True,
+        help="Path to following usernames (.txt one per line, or .json export)",
+    )
+    parser.add_argument(
+        "--followers",
+        required=True,
+        help="Path to follower usernames (.txt one per line, or .json export)",
+    )
     parser.add_argument("-o", "--output", help="Output file path")
     parser.set_defaults(func=_run)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(prog="unfollowers")
-    parser.add_argument("--following", required=True, help="Path to following usernames (one per line)")
-    parser.add_argument("--followers", required=True, help="Path to follower usernames (one per line)")
+    parser.add_argument(
+        "--following",
+        required=True,
+        help="Path to following usernames (.txt one per line, or .json export)",
+    )
+    parser.add_argument(
+        "--followers",
+        required=True,
+        help="Path to follower usernames (.txt one per line, or .json export)",
+    )
     parser.add_argument("-o", "--output", help="Output file path")
     return _run(parser.parse_args())
 

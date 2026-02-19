@@ -104,7 +104,11 @@ python-tools web-images "https://example.com" --output data/reports/images.txt
 
 ### 4) Unfollower checker
 
-Given two text files (one username per line):
+Supported input formats:
+- `.txt` (one username per line)
+- `.json` (Instagram export style or username lists)
+
+Text example:
 - `following.txt`
 - `followers.txt`
 
@@ -112,6 +116,12 @@ Run:
 
 ```bash
 python-tools unfollowers --following following.txt --followers followers.txt
+```
+
+JSON example:
+
+```bash
+python-tools unfollowers --following following.json --followers followers_1.json
 ```
 
 Custom output file:
