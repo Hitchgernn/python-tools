@@ -1,127 +1,187 @@
-# Audio & Video Downloader (TikTok / YouTube)
+# python-tools
 
-A simple CLI tool to download **audio (MP3)** or **video (MP4)** from **TikTok** and **YouTube** using `yt-dlp`.
+A modular Python toolkit for media and social utilities.
 
-Downloaded files are saved automatically to your `~/Downloads` folder.
-
----
-
-## Features
-
-- Download audio → `~/Downloads/audio`
-- Download video → `~/Downloads/video`
-- Supports:
-  - TikTok videos
-  - YouTube videos
-  - YouTube Shorts
-- Optional custom filename
-- Auto-detects browser cookies when available
-- Works even if no supported browser is found
-
----
+This repo includes:
+- YouTube downloader (audio/video)
+- TikTok downloader (audio/video)
+- Web image URL extractor
+- Unfollower checker (from two username lists)
 
 ## Requirements
 
-- Python 3.9+
-- ffmpeg
+- Python `3.10+`
+- `ffmpeg` (required for audio extraction/merging in `yt-dlp` workflows)
 
-Install ffmpeg:
+Install `ffmpeg`:
 
-### Fedora
 ```bash
+# Fedora
 sudo dnf install ffmpeg
-```
 
-### Ubuntu / Debian
-```bash
+# Ubuntu / Debian
 sudo apt install ffmpeg
 ```
 
-### Windows
-Using winget:
-```bat
-winget install Gyan.FFmpeg
-```
+## Installation
 
-Using Chocolatey:
-```bat
-choco install ffmpeg
-```
-
-Manual install: download a build from https://www.gyan.dev/ffmpeg/builds/ and add `ffmpeg` to your PATH.
-
----
-
-## Install (Python deps)
-
-Use pip (recommended inside a venv):
+From the repo root:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -U pip yt-dlp
+python -m pip install -U pip
+python -m pip install -e .
 ```
 
----
+This installs command entrypoints defined in `pyproject.toml`.
 
-## Usage
+## Quick Start
 
-### Option 1: Run the helper script (auto-venv)
 ```bash
-./downloader.sh
+python-tools --help
 ```
 
-### Option 2: Run the Python script directly
+Main command groups:
+- `yt`
+- `tiktok`
+- `web-images`
+- `unfollowers`
+
+## Command Usage
+
+### 1) YouTube downloader
+
+Download audio (default mode):
+
 ```bash
-python downloader.py
+python-tools yt "https://youtube.com/watch?v=VIDEO_ID"
 ```
 
-### Windows: Run the Python script directly
-```bat
-py downloader.py
+Download video:
+
+```bash
+python-tools yt "https://youtube.com/watch?v=VIDEO_ID" --mode video
 ```
 
-If `py` is not available, use:
-```bat
-python downloader.py
+Custom filename (without extension):
+
+```bash
+python-tools yt "https://youtube.com/watch?v=VIDEO_ID" --mode audio --output "my_track"
 ```
 
-You will be prompted for:
-- URL (TikTok / YouTube / Shorts)
-- Audio or Video
-- Optional filename (press Enter to use the video title)
+### 2) TikTok downloader
 
----
+Download audio:
 
-## Output
+```bash
+python-tools tiktok "https://www.tiktok.com/@user/video/123" --mode audio
+```
 
-- Audio files: `~/Downloads/audio`
-- Video files: `~/Downloads/video`
+Download video:
 
-If you set a filename, the extension is added automatically.
+```bash
+python-tools tiktok "https://www.tiktok.com/@user/video/123" --mode video
+```
 
----
+Notes:
+- TikTok `/photo/` posts are unreliable for video downloads.
+- The audio path attempts a `/photo/ -> /video/` fallback.
 
-## Cookie Support
+### 3) Web image extractor
 
-The script auto-detects cookies from supported browsers:
-`firefox`, `chrome`, `chromium`, `brave`, `edge`, `opera`, `vivaldi`.
+Extract image URLs from a page:
 
-If none are found, it continues without cookies.
+```bash
+python-tools web-images "https://example.com"
+```
 
----
+Write output to a custom file:
 
-## TikTok Photo Mode Note
+```bash
+python-tools web-images "https://example.com" --output data/reports/images.txt
+```
 
-TikTok Photo Mode (`/photo/`) is not reliably supported by yt-dlp.
-The script tries a `/photo/` -> `/video/` workaround for audio, but it may fail.
+### 4) Unfollower checker
 
----
+Given two text files (one username per line):
+- `following.txt`
+- `followers.txt`
+
+Run:
+
+```bash
+python-tools unfollowers --following following.txt --followers followers.txt
+```
+
+Custom output file:
+
+```bash
+python-tools unfollowers --following following.txt --followers followers.txt --output data/reports/unfollowers.txt
+```
+
+## Alternate script wrappers
+
+You can also run thin wrappers in `tools/`:
+
+```bash
+python tools/yt.py "https://youtube.com/watch?v=VIDEO_ID" -m audio
+python tools/tiktok.py "https://www.tiktok.com/@user/video/123" -m video
+python tools/web_images.py "https://example.com"
+python tools/unfollowers.py --following following.txt --followers followers.txt
+```
+
+## Output Locations
+
+By default, outputs are written under `data/`:
+- Downloads: `data/downloads/`
+- Reports: `data/reports/`
+- Images directory placeholder: `data/images/`
+
+Change output root with env var:
+
+```bash
+export PYTHON_TOOLS_DATA_DIR=/path/to/output-root
+```
+
+## Project Structure
+
+```text
+python-tools/
+├─ README.md
+├─ pyproject.toml
+├─ .gitignore
+├─ .env.example
+├─ src/
+│  └─ python_tools/
+│     ├─ cli.py
+│     ├─ common/
+│     ├─ media/
+│     └─ social/
+├─ tools/
+├─ tests/
+└─ data/
+```
+
+## Development
+
+Run tests (if installed):
+
+```bash
+python -m pytest -q
+```
+
+If pytest is missing:
+
+```bash
+python -m pip install pytest
+```
 
 ## Troubleshooting
 
-- Ensure `ffmpeg` is installed and on your PATH.
-- Update yt-dlp if downloads fail:
+- `ffmpeg not found`: install `ffmpeg` and ensure it is in `PATH`.
+- Download failures: update dependencies:
   ```bash
   python -m pip install -U yt-dlp
   ```
+- Some sites require cookies/session context; behavior depends on platform restrictions.

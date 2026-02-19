@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python-tools"
+version = "0.1.0"
+description = "A toolkit for media and social utilities"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "python-tools" }]
+dependencies = [
+  "beautifulsoup4>=4.12",
+  "requests>=2.31",
+  "yt-dlp>=2025.1.0"
+]
+
+[project.scripts]
+python-tools = "python_tools.cli:main"
+yt = "python_tools.media.yt_downloader.cli:main"
+tiktok = "python_tools.media.tiktok_downloader.cli:main"
+web-images = "python_tools.media.web_images.cli:main"
+unfollowers = "python_tools.social.unfollower_checker.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
